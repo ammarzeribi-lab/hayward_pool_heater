@@ -32,7 +32,6 @@
  */
 
 #include "FrameConf1.h"
-#include <set>
 #include "CS.h"
 #include "Schema.h"
 #include "esphome/components/climate/climate.h"
@@ -169,7 +168,7 @@ optional<std::shared_ptr<BaseFrame>> FrameConf1::control(const HWPCall& call) {
         std::make_shared<FrameConf1>(command_frame)};
 }
 void FrameConf1::traits(climate::ClimateTraits& traits, heat_pump_data_t& hp_data) {
-    const std::set<climate::ClimateMode> any_mode = {
+    const climate::ClimateModeMask any_mode = {
         climate::CLIMATE_MODE_OFF,
         climate::CLIMATE_MODE_HEAT,
         climate::CLIMATE_MODE_COOL,
