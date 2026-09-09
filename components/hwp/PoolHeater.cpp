@@ -59,7 +59,7 @@ void PoolHeater::setup() {
     // Using App.get_compilation_time() means these will get reset each time the firmware is
     // updated, but this is an easy way to prevent wierd conflicts if e.g. select options change.
     preferences_ = global_preferences->make_preference<PoolHeaterPreferences>(
-        get_object_id_hash() ^ fnv1_hash(App.get_compilation_time()));
+        get_object_id_hash() ^ fnv1_hash(App.get_name()));
     restore_preferences_();
     set_actual_status("Ready");
     this->status_set_warning("Waiting for heater state");
@@ -108,7 +108,10 @@ void PoolHeater::update() {
     }
     this->mode = this->hp_data_.mode.value_or(this->mode);
     if(this->hp_data_.fan_mode.has_value() ) {
-        this->custom_fan_mode = this->hp_data_.fan_mode->to_custom_fan_mode();
+        auto custom_fm = this->hp_data_.fan_mode->to_custom_fan_mode();
+        if (custom_fm.has_value()) {
+            this->set_custom_fan_mode_(custom_fm->c_str());
+        }
         this->fan_mode = this->hp_data_.fan_mode->to_climate_fan_mode();
     }
 
@@ -284,11 +287,11 @@ bool PoolHeater::is_update_active() { return this->update_active_; }
 climate::ClimateTraits PoolHeater::traits() {
     auto traits = climate::ClimateTraits();
 
-    traits.set_supports_current_temperature(true);
-    traits.set_supports_action(true);
+    traits.add_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_TEMPERATURE |
+                             climate::CLIMATE_SUPPORTS_ACTION);
     this->driver_.traits(traits, this->hp_data_);
-    traits.set_supports_two_point_target_temperature(false);
-    traits.set_supports_current_humidity(false);
+    traits.clear_feature_flags(climate::CLIMATE_SUPPORTS_TWO_POINT_TARGET_TEMPERATURE |
+                               climate::CLIMATE_SUPPORTS_CURRENT_HUMIDITY);
 
     return traits;
 }
