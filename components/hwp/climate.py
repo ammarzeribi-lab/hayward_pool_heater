@@ -75,6 +75,7 @@ CODEOWNERS = ["@sle118"]
 
 AUTO_LOAD = [
     "climate",
+    "switch",
     "select",
     "sensor",
     "binary_sensor",
@@ -83,6 +84,7 @@ AUTO_LOAD = [
     "time",
     "number",
     "watchdog",
+]
 ]
 
 CONF_THROTTLE_AVERAGE = "throttle_average"
