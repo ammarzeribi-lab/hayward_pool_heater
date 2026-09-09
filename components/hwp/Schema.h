@@ -215,8 +215,8 @@ class FanMode {
      * @return optional<FanMode> The fan mode if conversion was successful, nullopt otherwise
      */
     static optional<FanMode> from_call(const climate::ClimateCall& call) {
-        if (call.get_custom_fan_mode().has_value()) {
-            auto from_custom = from_custom_fan_mode(*call.get_custom_fan_mode());
+        if (!call.get_custom_fan_mode().empty()) {
+            auto from_custom = from_custom_fan_mode(call.get_custom_fan_mode().str());
             if (from_custom.has_value()) {
                 return from_custom;
             }
@@ -300,9 +300,7 @@ class FanMode {
     void set_supported_fan_modes(climate::ClimateTraits& traits) {
         traits.set_supported_fan_modes(
             {climate::ClimateFanMode::CLIMATE_FAN_LOW, climate::ClimateFanMode::CLIMATE_FAN_HIGH});
-        traits.add_supported_custom_fan_mode(scheduled_desc);
-        traits.add_supported_custom_fan_mode(ambient_desc);
-        traits.add_supported_custom_fan_mode(ambient_scheduled_desc);
+        traits.set_supported_custom_fan_modes({scheduled_desc, ambient_desc, ambient_scheduled_desc});
     }
 
   private:
