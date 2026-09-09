@@ -704,7 +704,7 @@ class BaseFrame {
      */
     static inline bool log_active(const char* tag, int min_level = ESPHOME_LOG_LEVEL_VERBOSE) {
         auto* log = logger::global_logger;
-        if (log == nullptr || log->level_for(tag) < min_level) {
+        if (log == nullptr || log->get_log_level() < min_level) {
             return false;
         }
         return true;
