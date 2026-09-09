@@ -85,7 +85,6 @@ AUTO_LOAD = [
     "number",
     "watchdog",
 ]
-]
 
 CONF_THROTTLE_AVERAGE = "throttle_average"
 
